@@ -64,7 +64,7 @@ export default function Home() {
           {/* Hero */}
           <div className="px-6 py-20 md:py-32 border-b border-border">
             <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-foreground mb-3 leading-[1.2]">
-              Building on Monad
+              Tools for Monad Builders
             </h1>
             <p className="text-base text-muted-foreground max-w-lg">
               Community tools and platforms for the Monad ecosystem.
