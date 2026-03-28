@@ -8,10 +8,10 @@ const PROPERTIES = [
     name: "Blitz",
     url: "https://blitz.devnads.com",
     description:
-      "Monad testnet event platform. Claim tokens, submit projects, form teams, and vote — all in one place.",
+      "Monad testnet event platform. Claim tokens, submit projects, form teams, and vote. All in one place.",
   },
   {
-    name: "Skills",
+    name: "monskills",
     url: "https://skills.devnads.com",
     description:
       "Level up your Monad development skills with guided challenges and hands-on exercises.",
@@ -23,7 +23,7 @@ const PROPERTIES = [
       "Monad Improvement Proposals. Community-driven standards and specifications for the ecosystem.",
   },
   {
-    name: "PuddleSwap",
+    name: "puddleswap",
     url: "https://app.puddleswap.org",
     description:
       "Swap tokens on Monad testnet. A simple, fast DEX for the Monad ecosystem.",
