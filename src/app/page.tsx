@@ -9,28 +9,24 @@ const PROPERTIES = [
     url: "https://blitz.devnads.com",
     description:
       "Monad testnet event platform. Claim tokens, submit projects, form teams, and vote — all in one place.",
-    status: "live" as const,
   },
   {
     name: "Skills",
     url: "https://skills.devnads.com",
     description:
       "Level up your Monad development skills with guided challenges and hands-on exercises.",
-    status: "live" as const,
   },
   {
     name: "MIP Land",
     url: "https://mipland.com",
     description:
       "Monad Improvement Proposals. Community-driven standards and specifications for the ecosystem.",
-    status: "live" as const,
   },
   {
     name: "PuddleSwap",
     url: "https://app.puddleswap.org",
     description:
       "Swap tokens on Monad testnet. A simple, fast DEX for the Monad ecosystem.",
-    status: "live" as const,
   },
 ];
 
@@ -93,17 +89,9 @@ export default function Home() {
                   className="bg-background p-6 flex flex-col gap-3 group hover:bg-secondary/30 transition-colors"
                 >
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <h3 className="text-base font-medium text-foreground">
-                        {prop.name}
-                      </h3>
-                      {prop.status === "live" && (
-                        <span className="inline-flex items-center gap-1 text-[10px] font-mono uppercase tracking-widest text-green-500">
-                          <span className="h-1.5 w-1.5 rounded-full bg-green-500" />
-                          Live
-                        </span>
-                      )}
-                    </div>
+                    <h3 className="text-base font-medium text-foreground">
+                      {prop.name}
+                    </h3>
                     <ArrowUpRight className="h-4 w-4 text-muted-foreground group-hover:text-foreground transition-colors" />
                   </div>
                   <p className="text-sm text-muted-foreground leading-relaxed">
