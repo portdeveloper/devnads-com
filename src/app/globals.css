@@ -1,26 +1,63 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Monad Midnight - matching blitz.devnads.com */
+  --background: 260 20% 4%;
+  --foreground: 0 0% 98%;
+
+  --card: 260 15% 7%;
+  --card-foreground: 0 0% 98%;
+
+  --primary: 265 89% 65%;
+  --primary-foreground: 0 0% 98%;
+
+  --secondary: 260 10% 12%;
+  --secondary-foreground: 0 0% 98%;
+
+  --muted: 260 10% 12%;
+  --muted-foreground: 260 10% 60%;
+
+  --accent: 190 90% 22%;
+  --accent-foreground: 190 90% 60%;
+
+  --border: 260 10% 15%;
+  --ring: 265 89% 65%;
+
+  --radius: 0rem;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+  --color-border: hsl(var(--border));
+  --color-ring: hsl(var(--ring));
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --radius: var(--radius);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  min-height: 100vh;
+  background-image: none;
+}
+
+@layer utilities {
+  .tag-text {
+    font-family: var(--font-geist-mono), monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 0.75rem;
+  }
 }
