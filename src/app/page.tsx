@@ -25,6 +25,13 @@ const PROPERTIES = [
       "Monad Improvement Proposals. Community-driven standards and specifications for the ecosystem.",
     status: "live" as const,
   },
+  {
+    name: "PuddleSwap",
+    url: "https://app.puddleswap.org",
+    description:
+      "Swap tokens on Monad testnet. A simple, fast DEX for the Monad ecosystem.",
+    status: "live" as const,
+  },
 ];
 
 const SOCIALS = [
@@ -76,7 +83,7 @@ export default function Home() {
             <h2 className="font-mono text-xs uppercase tracking-widest text-muted-foreground mb-6">
               Properties
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-px bg-border border border-border">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-border border border-border">
               {PROPERTIES.map((prop) => (
                 <a
                   key={prop.name}
