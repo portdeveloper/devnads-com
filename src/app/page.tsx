@@ -1,6 +1,7 @@
 "use client";
 
 import { BackgroundGrid } from "@/components/background-grid";
+import { AddMonadTestnet } from "@/components/add-monad-testnet";
 import { ArrowUpRight } from "lucide-react";
 
 const PROPERTIES = [
@@ -46,14 +47,15 @@ export default function Home() {
             <span className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
               Devnads
             </span>
-            <div className="flex gap-4">
+            <div className="flex items-center gap-4">
+              <AddMonadTestnet />
               {SOCIALS.map((s) => (
                 <a
                   key={s.name}
                   href={s.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-xs font-mono uppercase tracking-widest text-muted-foreground hover:text-accent-foreground transition-colors"
+                  className="text-xs font-mono uppercase tracking-widest text-muted-foreground hover:text-accent-foreground transition-colors hidden sm:block"
                 >
                   {s.name}
                 </a>
