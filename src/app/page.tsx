@@ -31,7 +31,7 @@ const PROPERTIES = [
   },
   {
     name: "Agents API",
-    url: "https://agents.devnads.com",
+    url: "/agents",
     description:
       "API for LLM agents to request testnet tokens and verify smart contracts on Monad testnet and mainnet.",
   },
@@ -88,12 +88,13 @@ export default function Home() {
               Properties
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-border border border-border">
-              {PROPERTIES.map((prop) => (
+              {PROPERTIES.map((prop) => {
+                const isExternal = prop.url.startsWith("http");
+                return (
                 <a
                   key={prop.name}
                   href={prop.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  {...(isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
                   className="bg-background p-6 flex flex-col gap-3 group hover:bg-secondary/30 transition-colors"
                 >
                   <div className="flex items-center justify-between">
@@ -109,7 +110,8 @@ export default function Home() {
                     {prop.url.replace("https://", "")}
                   </span>
                 </a>
-              ))}
+                );
+              })}
             </div>
           </div>
 
