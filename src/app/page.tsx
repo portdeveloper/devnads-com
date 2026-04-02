@@ -82,18 +82,16 @@ export default function Home() {
 
           {/* Properties grid */}
           <div className="px-6 py-10">
-            <h2 className="font-mono text-xs uppercase tracking-widest text-muted-foreground mb-6">
-              Properties
-            </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-border border border-border">
-              {PROPERTIES.map((prop) => {
+              {PROPERTIES.map((prop, i) => {
                 const isExternal = prop.url.startsWith("http");
+                const isLastOdd = PROPERTIES.length % 2 === 1 && i === PROPERTIES.length - 1;
                 return (
                 <a
                   key={prop.name}
                   href={prop.url}
                   {...(isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-                  className="bg-background p-6 flex flex-col gap-3 group hover:bg-secondary/30 transition-colors"
+                  className={`bg-background p-6 flex flex-col gap-3 group hover:bg-secondary/30 transition-colors${isLastOdd ? " md:col-span-2" : ""}`}
                 >
                   <div className="flex items-center justify-between">
                     <h3 className="text-base font-medium text-foreground">
