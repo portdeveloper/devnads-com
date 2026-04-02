@@ -50,9 +50,7 @@ export default function Home() {
         {/* Header */}
         <header className="border-b border-border">
           <div className="max-w-[960px] mx-auto w-full border-x border-border px-6 py-4 flex items-center justify-between">
-            <span className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
-              Devnads
-            </span>
+            <span />
             <div className="flex items-center gap-4">
               <AddMonadTestnet />
               {SOCIALS.map((s) => (
