@@ -95,7 +95,6 @@ export default function AgentsPage() {
               className="flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors"
             >
               <ArrowLeft className="h-3.5 w-3.5" />
-              Devnads
             </Link>
             <a
               href="https://github.com/portdeveloper/monad-agents-api"
