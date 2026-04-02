@@ -29,6 +29,12 @@ const PROPERTIES = [
     description:
       "Swap tokens on Monad testnet. A simple, fast DEX for the Monad ecosystem.",
   },
+  {
+    name: "Agents API",
+    url: "https://agents.devnads.com",
+    description:
+      "API for LLM agents to request testnet tokens and verify smart contracts on Monad testnet and mainnet.",
+  },
 ];
 
 const SOCIALS = [
