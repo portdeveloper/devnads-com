@@ -35,6 +35,12 @@ const PROPERTIES = [
     description:
       "API for LLM agents to request testnet tokens and verify smart contracts on Monad testnet and mainnet.",
   },
+  {
+    name: "Monad Hackathon Templates",
+    url: "https://nikkudotdev-templates.vercel.app/",
+    description:
+      "Hackathon-ready templates for Monad. Build faster without starting from scratch — includes setups for DeFi, indexers, swaps, and more.",
+  },
 ];
 
 const SOCIALS = [
@@ -85,27 +91,34 @@ export default function Home() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-border border border-border">
               {PROPERTIES.map((prop, i) => {
                 const isExternal = prop.url.startsWith("http");
-                const isLastOdd = PROPERTIES.length % 2 === 1 && i === PROPERTIES.length - 1;
+                const isLastOdd =
+                  PROPERTIES.length % 2 === 1 &&
+                  i === PROPERTIES.length - 1;
+
                 return (
-                <a
-                  key={prop.name}
-                  href={prop.url}
-                  {...(isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-                  className={`bg-background p-6 flex flex-col gap-3 group hover:bg-secondary/30 transition-colors${isLastOdd ? " md:col-span-2" : ""}`}
-                >
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-base font-medium text-foreground">
-                      {prop.name}
-                    </h3>
-                    <ArrowUpRight className="h-4 w-4 text-muted-foreground group-hover:text-foreground transition-colors" />
-                  </div>
-                  <p className="text-sm text-muted-foreground leading-relaxed">
-                    {prop.description}
-                  </p>
-                  <span className="text-xs font-mono text-muted-foreground/60 mt-auto">
-                    {prop.url.replace("https://", "")}
-                  </span>
-                </a>
+                  <a
+                    key={prop.name}
+                    href={prop.url}
+                    {...(isExternal
+                      ? { target: "_blank", rel: "noopener noreferrer" }
+                      : {})}
+                    className={`bg-background p-6 flex flex-col gap-3 group hover:bg-secondary/30 transition-colors${
+                      isLastOdd ? " md:col-span-2" : ""
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-base font-medium text-foreground">
+                        {prop.name}
+                      </h3>
+                      <ArrowUpRight className="h-4 w-4 text-muted-foreground group-hover:text-foreground transition-colors" />
+                    </div>
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      {prop.description}
+                    </p>
+                    <span className="text-xs font-mono text-muted-foreground/60 mt-auto">
+                      {prop.url.replace("https://", "")}
+                    </span>
+                  </a>
                 );
               })}
             </div>
