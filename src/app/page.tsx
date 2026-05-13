@@ -13,7 +13,7 @@ const PROPERTIES = [
   },
   {
     name: "monskills",
-    url: "https://skills.devnads.com",
+    url: "https://skills.devnads.com/?utm_source=blitz_website",
     description:
       "Level up your Monad development skills with guided challenges and hands-on exercises.",
   },
