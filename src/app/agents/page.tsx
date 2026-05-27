@@ -174,8 +174,8 @@ export default function AgentsPage() {
               Verification Parameters
             </h2>
             <p className="text-sm text-muted-foreground mb-6">
-              Verifies contracts in parallel across three explorers: MonadVision
-              (Sourcify), Socialscan, and Monadscan (Etherscan V2).
+              Verifies contracts in parallel across two explorers: MonadVision
+              (Sourcify) and Monadscan (Etherscan V2).
             </p>
             <div className="border border-border overflow-x-auto">
               <table className="w-full text-sm">
@@ -235,10 +235,10 @@ export default function AgentsPage() {
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-px bg-border border border-border">
               {[
-                { label: "Per address", value: "1 request / day" },
-                { label: "Per IP", value: "5 requests / day" },
-                { label: "Per ASN", value: "20 requests / day" },
-                { label: "Daily budget", value: "500 MON / day" },
+                { label: "Per address", value: "10 requests / day" },
+                { label: "Per IP", value: "50 requests / day" },
+                { label: "Per ASN", value: "200 requests / day" },
+                { label: "Daily budget", value: "2000 MON / day" },
               ].map((limit) => (
                 <div
                   key={limit.label}
