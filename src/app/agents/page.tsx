@@ -24,6 +24,13 @@ const ENDPOINTS = [
   }'`,
   },
   {
+    method: "GET",
+    path: "/v1/verify/status/:chainId/:address",
+    description: "Check whether a contract's source is verified",
+    chains: "Testnet + Mainnet",
+    example: `curl ${BASE_URL}/v1/verify/status/10143/0x...`,
+  },
+  {
     method: "POST",
     path: "/v1/faucet",
     description: "Request testnet MON tokens",
