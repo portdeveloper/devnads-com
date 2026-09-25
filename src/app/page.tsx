@@ -30,6 +30,12 @@ const PROPERTIES = [
       "Swap tokens on Monad testnet. A simple, fast DEX for the Monad ecosystem.",
   },
   {
+    name: "Test Tokens",
+    url: "/tokens",
+    description:
+      "Mint test USDC, USDT, WETH, WBTC and NFTs on Monad testnet. Real decimals and interfaces, no value.",
+  },
+  {
     name: "Agents API",
     url: "/agents",
     description:
