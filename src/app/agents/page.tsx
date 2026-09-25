@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useState } from "react";
 
 const BASE_URL = "https://agents.devnads.com";
+const FAUCET_ADDRESS = "0x67CC2A06773963e7D862084b3242DBE3CfbcFB13";
 
 const ENDPOINTS = [
   {
@@ -240,6 +241,25 @@ export default function AgentsPage() {
             <p className="text-sm text-muted-foreground mb-6">
               Dispenses 1 MON per request on testnet (chain 10143).
             </p>
+            <div className="border border-border bg-background p-4 mb-6 flex flex-col gap-1">
+              <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground/60">
+                Faucet address
+              </span>
+              <div className="flex items-center gap-3 min-w-0">
+                <a
+                  href={`https://testnet.monadvision.com/address/${FAUCET_ADDRESS}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-mono text-sm text-foreground hover:underline break-all"
+                >
+                  {FAUCET_ADDRESS}
+                </a>
+                <CopyButton text={FAUCET_ADDRESS} />
+              </div>
+              <span className="text-xs text-muted-foreground/60">
+                Send testnet MON here to help keep the faucet funded.
+              </span>
+            </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-px bg-border border border-border">
               {[
                 { label: "Per address", value: "10 requests / day" },
