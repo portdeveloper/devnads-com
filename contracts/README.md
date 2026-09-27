@@ -9,6 +9,7 @@ Freely mintable, ownerless test tokens backing [devnads.com/tokens](https://devn
 | WETH (Test Wrapped Ether) | `0x05bE0A4Bc7848424029B75d51565A34e17802D2d` | 18 | 5 |
 | WBTC (Test Wrapped BTC) | `0x596886d5875D73cC9bCEC4fAf1EE54e4B8af3d6a` | 8 | 0.5 |
 | DTNFT (Devnads Test NFT, ERC-721) | `0x26A784DfaF1e428aC51a5c1AE6E80E84278Af41D` | – | 10 |
+| DTITEM (Devnads Test Items, ERC-1155, ids 1–6) | `0xF8377FC7422E5331d37FAb78622906e2743e34b7` | – | 100 per id |
 
 ```sh
 pnpm install          # OpenZeppelin and forge-std come from node_modules

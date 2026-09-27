@@ -51,3 +51,45 @@ contract TestTokensTest is Test {
         nft.mint(alice, 11);
     }
 }
+
+import {TestItems} from "../src/TestItems.sol";
+
+contract TestItemsTest is Test {
+    TestItems items;
+    address alice = address(0xA11CE);
+
+    function setUp() public {
+        items = new TestItems();
+    }
+
+    function test_MintSingle() public {
+        vm.prank(alice);
+        items.mint(alice, 1, 100);
+        assertEq(items.balanceOf(alice, 1), 100);
+        assertEq(items.totalSupply(1), 100);
+    }
+
+    function test_MintBatch() public {
+        uint256[] memory ids = new uint256[](3);
+        uint256[] memory amounts = new uint256[](3);
+        (ids[0], ids[1], ids[2]) = (1, 4, 6);
+        (amounts[0], amounts[1], amounts[2]) = (5, 10, 1);
+        items.mintBatch(alice, ids, amounts);
+        assertEq(items.balanceOf(alice, 4), 10);
+        assertEq(items.balanceOf(alice, 6), 1);
+    }
+
+    function test_RevertBadIdOrAmount() public {
+        vm.expectRevert(abi.encodeWithSelector(TestItems.InvalidId.selector, 7));
+        items.mint(alice, 7, 1);
+        vm.expectRevert(abi.encodeWithSelector(TestItems.InvalidAmount.selector, 101));
+        items.mint(alice, 1, 101);
+        vm.expectRevert(abi.encodeWithSelector(TestItems.InvalidAmount.selector, 0));
+        items.mint(alice, 1, 0);
+    }
+
+    function test_Uri() public view {
+        assertGt(bytes(items.uri(3)).length, 100);
+        assertTrue(items.supportsInterface(0xd9b67a26)); // ERC-1155
+    }
+}

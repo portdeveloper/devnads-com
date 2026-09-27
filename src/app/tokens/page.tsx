@@ -30,6 +30,17 @@ const TOKENS = [
 const NFT_ADDRESS: Address = "0x26A784DfaF1e428aC51a5c1AE6E80E84278Af41D";
 const NFT_MAX_PER_MINT = 10;
 
+const ITEMS_ADDRESS: Address = "0xF8377FC7422E5331d37FAb78622906e2743e34b7";
+const ITEM_IDS = [1, 2, 3, 4, 5, 6];
+const ITEMS_MAX_PER_MINT = 100;
+
+const ITEMS_ABI = parseAbi([
+  "function mint(address to, uint256 id, uint256 amount)",
+  "function mintBatch(address to, uint256[] ids, uint256[] amounts)",
+  "function balanceOfBatch(address[] accounts, uint256[] ids) view returns (uint256[])",
+  "function uri(uint256 id) view returns (string)",
+]);
+
 const TOKEN_ABI = parseAbi([
   "function mint(address to, uint256 amount)",
   "function balanceOf(address) view returns (uint256)",
@@ -345,6 +356,123 @@ function NftSection({ account, onConnect }: { account?: Address; onConnect: () =
   );
 }
 
+type Item = { id: number; name: string; image: string };
+
+function ItemsSection({ account, onConnect }: { account?: Address; onConnect: () => Promise<Address | undefined> }) {
+  const [amount, setAmount] = useState(10);
+  const [items, setItems] = useState<Item[]>([]);
+  const [balances, setBalances] = useState<readonly bigint[]>();
+  const [status, setStatus] = useState<Status>({ kind: "idle" });
+  const [balanceVersion, setBalanceVersion] = useState(0);
+
+  useEffect(() => {
+    Promise.all(
+      ITEM_IDS.map(async (id) => {
+        const uri = await publicClient.readContract({ address: ITEMS_ADDRESS, abi: ITEMS_ABI, functionName: "uri", args: [BigInt(id)] });
+        const meta = JSON.parse(atob(uri.split(",")[1]));
+        return { id, name: meta.name as string, image: meta.image as string };
+      }),
+    )
+      .then(setItems)
+      .catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    if (!account) return;
+    let cancelled = false;
+    publicClient
+      .readContract({ address: ITEMS_ADDRESS, abi: ITEMS_ABI, functionName: "balanceOfBatch", args: [ITEM_IDS.map(() => account), ITEM_IDS.map(BigInt)] })
+      .then((b) => !cancelled && setBalances(b))
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, [account, balanceVersion]);
+
+  async function mint(ids: number[]) {
+    try {
+      if (!account && !(await onConnect())) return;
+      const { walletClient, account: from } = await getWallet();
+      setStatus({ kind: "pending", text: "Confirm in your wallet..." });
+      const hash =
+        ids.length === 1
+          ? await walletClient.writeContract({ account: from, address: ITEMS_ADDRESS, abi: ITEMS_ABI, functionName: "mint", args: [from, BigInt(ids[0]), BigInt(amount)] })
+          : await walletClient.writeContract({ account: from, address: ITEMS_ADDRESS, abi: ITEMS_ABI, functionName: "mintBatch", args: [from, ids.map(BigInt), ids.map(() => BigInt(amount))] });
+      setStatus({ kind: "pending", text: "Waiting for confirmation..." });
+      await publicClient.waitForTransactionReceipt({ hash });
+      setStatus({ kind: "done", hash });
+      setBalanceVersion((v) => v + 1);
+    } catch (e) {
+      setStatus({ kind: "error", text: errorMessage(e) });
+    }
+  }
+
+  return (
+    <div className="bg-background p-6 flex flex-col gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2">
+        <div className="flex flex-col gap-1 min-w-0">
+          <div className="flex items-baseline gap-3">
+            <span className="text-base font-medium text-foreground">DTITEM</span>
+            <span className="text-sm text-muted-foreground">Devnads Test Items</span>
+          </div>
+          <AddressLink address={ITEMS_ADDRESS} />
+        </div>
+        <div className="flex gap-4 font-mono text-[10px] uppercase tracking-widest text-muted-foreground/60 shrink-0">
+          <span>ERC-1155</span>
+          <span>6 item ids</span>
+          <span>Batch mint</span>
+        </div>
+      </div>
+      <div className="flex flex-col sm:flex-row gap-2">
+        <div className="flex flex-1 items-center border border-border">
+          <input
+            type="number"
+            min={1}
+            max={ITEMS_MAX_PER_MINT}
+            value={amount}
+            onChange={(e) => setAmount(Math.max(1, Math.min(ITEMS_MAX_PER_MINT, Number(e.target.value) || 1)))}
+            className="flex-1 min-w-0 bg-transparent px-3 py-2 font-mono text-sm text-foreground outline-none"
+            aria-label="Amount per item"
+          />
+          <span className="px-3 font-mono text-[10px] uppercase tracking-widest text-muted-foreground/60">per item, max {ITEMS_MAX_PER_MINT}</span>
+        </div>
+        <button onClick={() => mint(ITEM_IDS)} disabled={status.kind === "pending"} className={buttonClass}>
+          Mint all 6 (batch)
+        </button>
+      </div>
+      <div className="grid grid-cols-2 sm:grid-cols-6 gap-2">
+        {ITEM_IDS.map((id, i) => {
+          const item = items.find((it) => it.id === id);
+          return (
+            <div key={id} className="border border-border bg-background p-2 flex flex-col gap-2">
+              {item ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={item.image} alt={item.name} className="w-full aspect-square" />
+              ) : (
+                <div className="w-full aspect-square bg-secondary/30" />
+              )}
+              <div className="flex items-center justify-between gap-1">
+                <span className="font-mono text-xs text-muted-foreground">
+                  #{id}
+                  {balances ? ` · ${balances[i].toString()}` : ""}
+                </span>
+                <button
+                  onClick={() => mint([id])}
+                  disabled={status.kind === "pending"}
+                  className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground hover:text-foreground disabled:opacity-50"
+                >
+                  Mint
+                </button>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+      <StatusLine status={status} />
+    </div>
+  );
+}
+
 export default function TokensPage() {
   const [account, setAccount] = useState<Address>();
   const [connectError, setConnectError] = useState<string>();
@@ -406,7 +534,7 @@ export default function TokensPage() {
               Test Tokens
             </h1>
             <p className="text-base text-muted-foreground max-w-lg">
-              Mint test versions of USDC, USDT, WETH and WBTC, plus test NFTs, on
+              Mint test versions of USDC, USDT, WETH and WBTC, plus ERC-721 and ERC-1155 test NFTs, on
               Monad testnet. Same decimals and interfaces as the real tokens,
               no value.
             </p>
@@ -440,6 +568,7 @@ export default function TokensPage() {
             <h2 className="font-mono text-xs uppercase tracking-widest text-muted-foreground mb-6">NFTs</h2>
             <div className="grid grid-cols-1 gap-px bg-border border border-border">
               <NftSection account={account} onConnect={connect} />
+              <ItemsSection account={account} onConnect={connect} />
             </div>
           </div>
         </main>

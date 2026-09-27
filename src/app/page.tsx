@@ -33,7 +33,7 @@ const PROPERTIES = [
     name: "Test Tokens",
     url: "/tokens",
     description:
-      "Mint test USDC, USDT, WETH, WBTC and NFTs on Monad testnet. Real decimals and interfaces, no value.",
+      "Mint test USDC, USDT, WETH, WBTC and ERC-721/ERC-1155 NFTs on Monad testnet. Real decimals and interfaces, no value.",
   },
   {
     name: "Agents API",
