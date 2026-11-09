@@ -164,7 +164,7 @@ export default function WdkPage() {
               ))}
             </div>
             <p className="text-sm text-muted-foreground">
-              Together: QVAC decides what to do, WDK signs and sends it.               Inference and signing both happen on your machine, so an agent can
+              Together: QVAC decides what to do, WDK signs and sends it. Inference and signing both happen on your machine, so an agent can
               hold a wallet without handing keys or prompts to a third party; only the signed transaction leaves it.
             </p>
           </Section>
