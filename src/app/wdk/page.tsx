@@ -99,6 +99,49 @@ const WHAT = [
   },
 ];
 
+const IDEAS = [
+  {
+    name: "Pay-per-prompt AI",
+    body: "One laptop runs a bigger model and charges 0.001 test USDT per answer. Your agent pays automatically with WDK on every request. Serve it over QVAC's P2P layer or plain HTTP.",
+  },
+  {
+    name: "Explain before you sign",
+    body: "Before WDK signs, a local model reads the transaction and says what it does in plain words: \"this lets contract X spend all your USDC forever.\" Anything over a limit needs a spoken confirmation.",
+  },
+  {
+    name: "Receipt splitter",
+    body: "Photo of the bill, QVAC OCR reads the items, the model splits them per person, WDK sends each share in test USDT.",
+  },
+  {
+    name: "Voice wallet in your language",
+    body: "\"Send 5 dollars to Ali\" in Turkish or Spanish. Speech-to-text and translation run locally, WDK pays, text-to-speech reads back the confirmation.",
+  },
+  {
+    name: "Allowance wallet",
+    body: "A parent (or a developer) writes spending rules in plain English: \"max 10 USDT a day, no gambling.\" A local model checks every spend before WDK signs it.",
+  },
+  {
+    name: "Bounty bot",
+    body: "Post a task, submit the work, the model judges it against the task, WDK pays the bounty after a human approves.",
+  },
+  {
+    name: "Private bill payer",
+    body: "Point it at a folder of invoices. Amounts, due dates and addresses are extracted on your machine and queued as WDK payments for one-click approval. Your financial documents never touch a cloud.",
+  },
+  {
+    name: "Live talk tip jar",
+    body: "Speech-to-text runs on a talk, and listeners' agents tip the speaker when they mention a topic you flagged: \"tip 0.1 when they say Monad.\"",
+  },
+  {
+    name: "Offline market stall",
+    body: "The seller says the price, the app shows a QR, the buyer pays. All the AI works offline; only the transaction needs a connection.",
+  },
+  {
+    name: "AI dungeon with real loot",
+    body: "A local LLM runs a text adventure. Finding treasure sends test tokens or mints NFTs to the player's WDK wallet (the /tokens contracts are already deployed).",
+  },
+];
+
 const LINKS = [
   { name: "Starter repo", url: REPO, description: "Clone this. WDK + QVAC agent, scripts, Monad config." },
   { name: "WDK docs", url: "https://docs.wdk.tether.io", description: "Wallet Development Kit: wallets, accounts, protocols." },
@@ -166,6 +209,28 @@ export default function WdkPage() {
             <p className="text-sm text-muted-foreground">
               Together: QVAC decides what to do, WDK signs and sends it. Inference and signing both happen on your machine, so an agent can
               hold a wallet without handing keys or prompts to a third party; only the signed transaction leaves it.
+            </p>
+          </Section>
+
+          <Section title="What to build">
+            <p className="text-sm text-muted-foreground">
+              Ideas sized for one day on top of the starter. The bar: QVAC makes a decision that changes what happens,
+              and WDK holds the keys (no MetaMask). A chatbot with a send button is the starter, not a project.
+            </p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-border border border-border">
+              {IDEAS.map((idea, i) => (
+                <div key={idea.name} className="bg-background p-6 flex flex-col gap-2">
+                  <h3 className="text-base font-medium text-foreground">
+                    <span className="font-mono text-xs text-muted-foreground/60 mr-3">{String(i + 1).padStart(2, "0")}</span>
+                    {idea.name}
+                  </h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">{idea.body}</p>
+                </div>
+              ))}
+            </div>
+            <p className="text-sm text-muted-foreground">
+              Probably too big for a day: training or fine-tuning models, autonomous trading (a 1.7B model shouldn&apos;t
+              make that call), cross-chain bridging.
             </p>
           </Section>
 
