@@ -86,6 +86,19 @@ const NETWORKS = [
   { name: "Mainnet", chainId: "143", rpc: "https://rpc.monad.xyz", tokens: "USDC, USDT0" },
 ];
 
+const WHAT = [
+  {
+    name: "WDK",
+    full: "Wallet Development Kit by Tether",
+    body: "JavaScript modules for building self-custodial wallets. One seed phrase derives accounts on EVM chains like Monad, plus Solana, TON, Tron and more. Read balances, quote fees, sign, send. Keys stay with the user, never with a server.",
+  },
+  {
+    name: "QVAC",
+    full: "Local AI SDK by Tether",
+    body: "Runs AI models on the user's own device: LLM chat with tool calling, speech-to-text, text-to-speech, translation, embeddings/RAG and OCR. Models download once and run offline on CPU or GPU, in Node.js or Expo. No API key, no cloud.",
+  },
+];
+
 const LINKS = [
   { name: "Starter repo", url: REPO, description: "Clone this. WDK + QVAC agent, scripts, Monad config." },
   { name: "WDK docs", url: "https://docs.wdk.tether.io", description: "Wallet Development Kit: wallets, accounts, protocols." },
@@ -137,6 +150,24 @@ export default function WdkPage() {
               ships an AI wallet agent that runs entirely on your laptop: no API keys, keys never leave your machine.
             </p>
           </div>
+
+          <Section title="What are WDK and QVAC?">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-border border border-border">
+              {WHAT.map((w) => (
+                <div key={w.name} className="bg-background p-6 flex flex-col gap-2">
+                  <div className="flex items-baseline gap-3">
+                    <h3 className="text-base font-medium text-foreground">{w.name}</h3>
+                    <span className="text-sm text-muted-foreground">{w.full}</span>
+                  </div>
+                  <p className="text-sm text-muted-foreground leading-relaxed">{w.body}</p>
+                </div>
+              ))}
+            </div>
+            <p className="text-sm text-muted-foreground">
+              Together: QVAC decides what to do, WDK signs and sends it.               Inference and signing both happen on your machine, so an agent can
+              hold a wallet without handing keys or prompts to a third party; only the signed transaction leaves it.
+            </p>
+          </Section>
 
           <Section title="Quick start">
             <p className="text-sm text-muted-foreground">Node.js 22+. A GPU is optional.</p>
