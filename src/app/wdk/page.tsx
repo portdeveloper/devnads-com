@@ -5,19 +5,22 @@ import { BackgroundGrid } from "@/components/background-grid";
 import { CodeBlock } from "@/components/code-block";
 
 export const metadata: Metadata = {
-  title: "WDK + QVAC on Monad - Devnads",
+  title: "WDK on Monad - Devnads",
   description:
-    "Build self-custodial wallets and local AI agents on Monad with Tether's WDK and QVAC. Hackathon starter, setup guide and Monad-specific gotchas.",
+    "Build self-custodial wallets and payments on Monad with Tether's WDK, with optional local AI from QVAC. Hackathon starter, project ideas and Monad-specific gotchas.",
 };
 
 const REPO = "https://github.com/portdeveloper/wdk-qvac-monad-starter";
 
 const QUICKSTART = `git clone ${REPO}
 cd wdk-qvac-monad-starter
-npm install       # ~2 GB (QVAC native runtimes), do it before the venue
+npm install       # ~240 MB
 npm run setup     # new seed in .env + 1 testnet MON from the devnads faucet
 npm run mint      # 100 test USDC + USDT
-npm run agent     # local AI wallet agent (first run downloads a ~1.1 GB model)`;
+npm run send -- 0xRecipient 5 USDC`;
+
+const AGENT_QUICKSTART = `npm run agent:install   # ~2 GB (QVAC native runtimes), do it before the venue
+npm run agent           # first run downloads a ~1.1 GB model, then it's cached`;
 
 const AGENT_DEMO = `you> pay 2 usdc to 0xa982dEFe14513bd83e8cFdF083AD6d3e867D45f0
 agent> transfer 2 USDC to 0xa982…45f0? max fee 0.012983954 MON [y/N] y
@@ -37,7 +40,15 @@ console.log(await account.getAddress(), await account.getBalance())
 
 const { hash } = await account.sendTransaction({ to: '0x…', value: 10n ** 16n }) // 0.01 MON`;
 
-const TOOL_SNIPPET = `// src/agent.js: one entry in TOOLS = one new agent capability
+const STARTER_SNIPPET = `import { createWallet } from './src/wallet.js'
+
+const wallet = await createWallet() // reads WDK_SEED + MONAD_NETWORK from env (node --env-file=.env)
+console.log(wallet.address, await wallet.balances())
+
+await wallet.transfer('USDC', '0x…', '5')
+await wallet.sendTransaction({ to: contract, data }) // any contract call`;
+
+const TOOL_SNIPPET = `// examples/qvac-agent/agent.js: one entry in TOOLS = one new agent capability
 tx_status: {
   description: 'Look up a transaction by its hash',
   parameters: z.object({ hash: z.string().regex(/^0x[0-9a-fA-F]{64}$/) }),
@@ -54,7 +65,6 @@ const VERIFIED = [
   ["MON sends (EIP-1559), receipts", "✓", "✓"],
   ["ERC-20 transfer", "✓", "fork only"],
   ["Parallel sends with the starter's write queue", "✓", "✓"],
-  ["QVAC agent → WDK tool calls", "✓", "not run"],
 ];
 
 const GOTCHAS: { title: string; body: string; link?: string }[] = [
@@ -86,20 +96,42 @@ const NETWORKS = [
   { name: "Mainnet", chainId: "143", rpc: "https://rpc.monad.xyz", tokens: "USDC, USDT0" },
 ];
 
-const WHAT = [
+const WDK_IDEAS = [
   {
-    name: "WDK",
-    full: "Wallet Development Kit by Tether",
-    body: "JavaScript modules for building self-custodial wallets. One seed phrase derives accounts on EVM chains like Monad, plus Solana, TON, Tron and more. Read balances, quote fees, sign, send. Keys stay with the user, never with a server.",
+    name: "Tip bot",
+    body: "A Telegram or Discord bot where every member gets a wallet derived from one seed (account index = user). /tip @friend 5 USDT. The bot holds the seed, so keep it on testnet.",
   },
   {
-    name: "QVAC",
-    full: "Local AI SDK by Tether",
-    body: "Runs AI models on the user's own device: LLM chat with tool calling, speech-to-text, text-to-speech, translation, embeddings/RAG and OCR. Models download once and run offline on CPU or GPU, in Node.js or Expo. No API key, no cloud.",
+    name: "Claim links",
+    body: "Send USDT as a link: the link carries a fresh one-time key holding the funds (plus a little MON for gas), and whoever opens it sweeps them into their own wallet. Red packets, giveaways, onboarding friends.",
+  },
+  {
+    name: "Checkout with per-order addresses",
+    body: "A shop derives a new address for every order from one seed, watches it for the USDT payment, marks the order paid, then tops it up with MON for gas and sweeps the funds to the treasury.",
+  },
+  {
+    name: "Pay-per-call API",
+    body: "Your API answers 402 with a price. The client pays in USDT on Monad with WDK, retries with the tx hash, and the server checks the receipt. Fees of a fraction of a cent make per-request pricing work.",
+  },
+  {
+    name: "Wallet MCP server",
+    body: "Give Claude, ChatGPT or any agent a wallet: an MCP server exposing balance, quote and send tools backed by WDK, with spending limits enforced in code, not in the prompt.",
+  },
+  {
+    name: "Split and settle",
+    body: "A group expense ledger that computes who owes whom and settles every debt in one go. The starter's write queue keeps the burst of back-to-back transfers safe on Monad.",
+  },
+  {
+    name: "Game with a real wallet",
+    body: "Every player gets a WDK wallet. Rewards are test USDT, items are the ERC-1155s from /tokens, and trades between players are real transfers.",
+  },
+  {
+    name: "One seed, many chains",
+    body: "One recovery phrase, accounts on Monad and Solana (or TON, Tron): a wallet that pays from whichever chain has the funds.",
   },
 ];
 
-const IDEAS = [
+const QVAC_IDEAS = [
   {
     name: "Pay-per-prompt AI",
     body: "One laptop runs a bigger model and charges 0.001 test USDT per answer. Your agent pays automatically with WDK on every request. Serve it over QVAC's P2P layer or plain HTTP.",
@@ -143,11 +175,33 @@ const IDEAS = [
 ];
 
 const LINKS = [
-  { name: "Starter repo", url: REPO, description: "Clone this. WDK + QVAC agent, scripts, Monad config." },
+  { name: "Starter repo", url: REPO, description: "Clone this. WDK wallet, scripts, Monad config, optional QVAC agent." },
   { name: "WDK docs", url: "https://docs.wdk.tether.io", description: "Wallet Development Kit: wallets, accounts, protocols." },
   { name: "QVAC docs", url: "https://docs.qvac.tether.io", description: "Local AI SDK: LLMs, tool calling, speech, RAG." },
   { name: "Test Tokens", url: "/tokens", description: "Mint test USDC, USDT, WETH, WBTC on Monad testnet." },
 ];
+
+function Part({ title, subtitle }: { title: string; subtitle: string }) {
+  return (
+    <div className="px-6 pt-16 pb-6 border-b border-border">
+      <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-foreground mb-2">{title}</h2>
+      <p className="text-base text-muted-foreground max-w-xl">{subtitle}</p>
+    </div>
+  );
+}
+
+function Ideas({ ideas }: { ideas: { name: string; body: string }[] }) {
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-border border border-border">
+      {ideas.map((idea) => (
+        <div key={idea.name} className="bg-background p-6 flex flex-col gap-2">
+          <h3 className="text-base font-medium text-foreground">{idea.name}</h3>
+          <p className="text-sm text-muted-foreground leading-relaxed">{idea.body}</p>
+        </div>
+      ))}
+    </div>
+  );
+}
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
@@ -186,78 +240,43 @@ export default function WdkPage() {
         <main className="flex-1 max-w-[960px] mx-auto w-full border-x border-border">
           <div className="px-6 py-20 md:py-32 border-b border-border">
             <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-foreground mb-3 leading-[1.2]">
-              WDK + QVAC on Monad
+              WDK on Monad
             </h1>
             <p className="text-base text-muted-foreground max-w-lg">
-              Build self-custodial wallets with Tether&apos;s WDK and local, on-device AI with QVAC. The starter
-              ships an AI wallet agent that runs entirely on your laptop: no API keys, keys never leave your machine.
+              Build self-custodial wallets and payments on Monad with Tether&apos;s Wallet Development Kit. Add local,
+              on-device AI with QVAC if your idea needs it.
             </p>
           </div>
 
-          <Section title="What are WDK and QVAC?">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-border border border-border">
-              {WHAT.map((w) => (
-                <div key={w.name} className="bg-background p-6 flex flex-col gap-2">
-                  <div className="flex items-baseline gap-3">
-                    <h3 className="text-base font-medium text-foreground">{w.name}</h3>
-                    <span className="text-sm text-muted-foreground">{w.full}</span>
-                  </div>
-                  <p className="text-sm text-muted-foreground leading-relaxed">{w.body}</p>
-                </div>
-              ))}
-            </div>
-            <p className="text-sm text-muted-foreground">
-              Together: QVAC decides what to do, WDK signs and sends it. Inference and signing both happen on your machine, so an agent can
-              hold a wallet without handing keys or prompts to a third party; only the signed transaction leaves it.
-            </p>
-          </Section>
-
-          <Section title="What to build">
-            <p className="text-sm text-muted-foreground">
-              Ideas sized for one day on top of the starter. The bar: QVAC makes a decision that changes what happens,
-              and WDK holds the keys (no MetaMask). A chatbot with a send button is the starter, not a project.
-            </p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-border border border-border">
-              {IDEAS.map((idea) => (
-                <div key={idea.name} className="bg-background p-6 flex flex-col gap-2">
-                  <h3 className="text-base font-medium text-foreground">
-                    {idea.name}
-                  </h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed">{idea.body}</p>
-                </div>
-              ))}
-            </div>
-            <p className="text-sm text-muted-foreground">
-              Probably too big for a day: training or fine-tuning models, autonomous trading (a 1.7B model shouldn&apos;t
-              make that call), cross-chain bridging.
-            </p>
-          </Section>
+          <Part
+            title="WDK"
+            subtitle="JavaScript modules for building self-custodial wallets. One seed phrase derives accounts on EVM chains like Monad, plus Solana, TON, Tron and more. Read balances, quote fees, sign, send. Keys stay with the user, never with a server."
+          />
 
           <Section title="Quick start">
-            <p className="text-sm text-muted-foreground">Node.js 22+. A GPU is optional.</p>
+            <p className="text-sm text-muted-foreground">Node.js 22+.</p>
             <CodeBlock code={QUICKSTART} />
-            <p className="text-sm text-muted-foreground">
-              Then talk to your wallet. The agent turns plain English into a tool call, WDK quotes it, and nothing
-              is sent until you confirm.
-            </p>
-            <CodeBlock code={AGENT_DEMO} />
           </Section>
 
-          <Section title="Use WDK directly">
+          <Section title="Use the wallet">
             <p className="text-sm text-muted-foreground">
-              Monad is a standard EVM chain to WDK: register <code className="font-mono">@tetherto/wdk-wallet-evm</code>{" "}
-              with a Monad RPC. Use the starter&apos;s <code className="font-mono">createWallet()</code> instead of raw
-              sends if you send more than one transaction at a time (see gotchas).
+              The starter&apos;s <code className="font-mono">createWallet()</code> wraps WDK with Monad config, token
+              helpers and a write queue that keeps back-to-back sends safe (see gotchas).
+            </p>
+            <CodeBlock code={STARTER_SNIPPET} />
+            <p className="text-sm text-muted-foreground">
+              Or use WDK directly. Monad is a standard EVM chain to it: register{" "}
+              <code className="font-mono">@tetherto/wdk-wallet-evm</code> with a Monad RPC.
             </p>
             <CodeBlock code={WDK_SNIPPET} />
           </Section>
 
-          <Section title="Add an agent tool">
+          <Section title="What to build">
             <p className="text-sm text-muted-foreground">
-              Tools are zod schemas. QVAC&apos;s Qwen3 1.7B model picks the tool and fills the arguments; your handler
-              calls WDK.
+              Ideas sized for one day. The bar: WDK holds the keys (no MetaMask), and the demo makes at least one real
+              transaction on Monad testnet.
             </p>
-            <CodeBlock code={TOOL_SNIPPET} />
+            <Ideas ideas={WDK_IDEAS} />
           </Section>
 
           <Section title="Monad gotchas">
@@ -310,8 +329,8 @@ export default function WdkPage() {
 
           <Section title="Verified">
             <p className="text-sm text-muted-foreground">
-              Tested November 2026 with @tetherto/wdk 1.0.0-beta.22, @tetherto/wdk-wallet-evm 1.0.0-beta.25 and
-              @qvac/sdk 0.23.0. WDK is in beta; the starter pins exact versions.
+              Tested November 2026 with @tetherto/wdk 1.0.0-beta.22 and @tetherto/wdk-wallet-evm 1.0.0-beta.25. WDK is
+              in beta; the starter pins exact versions.
             </p>
             <div className="overflow-x-auto border border-border">
               <table className="w-full min-w-[560px] text-sm">
@@ -333,6 +352,59 @@ export default function WdkPage() {
                 </tbody>
               </table>
             </div>
+          </Section>
+
+          <Part
+            title="WDK + QVAC"
+            subtitle="Optional. QVAC runs AI models on the user's own device: LLM chat with tool calling, speech-to-text, text-to-speech, translation, embeddings/RAG and OCR, offline, in Node.js or Expo. No API key, no cloud."
+          />
+
+          <Section title="Why combine them">
+            <p className="text-sm text-muted-foreground">
+              QVAC decides what to do, WDK signs and sends it. Inference and signing both happen on your machine, so an
+              agent can hold a wallet without handing keys or prompts to a third party; only the signed transaction
+              leaves it.
+            </p>
+          </Section>
+
+          <Section title="Run the agent">
+            <p className="text-sm text-muted-foreground">
+              The starter&apos;s agent lives in <code className="font-mono">examples/qvac-agent</code> with its own
+              install, so teams that only use WDK skip the download.
+            </p>
+            <CodeBlock code={AGENT_QUICKSTART} />
+            <p className="text-sm text-muted-foreground">
+              It turns plain English into a tool call, WDK quotes it, and nothing is sent until you confirm.
+            </p>
+            <CodeBlock code={AGENT_DEMO} />
+            <p className="text-sm text-muted-foreground">
+              Keep the confirmation. In testing, &quot;pay 1 usdt&quot; once came back as a 0.5 USDT transfer: small
+              models misread amounts.
+            </p>
+          </Section>
+
+          <Section title="Add an agent tool">
+            <p className="text-sm text-muted-foreground">
+              Tools are zod schemas. QVAC&apos;s Qwen3 1.7B model picks the tool and fills the arguments; your handler
+              calls WDK.
+            </p>
+            <CodeBlock code={TOOL_SNIPPET} />
+          </Section>
+
+          <Section title="What to build with QVAC">
+            <p className="text-sm text-muted-foreground">
+              The bar: QVAC makes a decision that changes what happens, and WDK holds the keys. A chatbot with a send
+              button is the starter, not a project.
+            </p>
+            <Ideas ideas={QVAC_IDEAS} />
+            <p className="text-sm text-muted-foreground">
+              Probably too big for a day: training or fine-tuning models, autonomous trading (a 1.7B model shouldn&apos;t
+              make that call), cross-chain bridging.
+            </p>
+            <p className="text-sm text-muted-foreground">
+              Verified with @qvac/sdk 0.23.0 on testnet: tool calls, balance lookups and token transfers through WDK.
+              QVAC ships builds for macOS, Linux and Windows; we ran it on Linux.
+            </p>
           </Section>
 
           <div className="px-6 py-10">

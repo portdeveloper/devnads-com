@@ -36,10 +36,10 @@ const PROPERTIES = [
       "Mint test USDC, USDT, WETH, WBTC and ERC-721/ERC-1155 NFTs on Monad testnet. Real decimals and interfaces, no value.",
   },
   {
-    name: "WDK + QVAC",
+    name: "WDK on Monad",
     url: "/wdk",
     description:
-      "Hackathon starter for self-custodial wallets and local AI agents on Monad with Tether's WDK and QVAC.",
+      "Hackathon starter for self-custodial wallets and payments on Monad with Tether's WDK, plus optional local AI with QVAC.",
   },
   {
     name: "Agents API",
