@@ -218,10 +218,9 @@ export default function WdkPage() {
               and WDK holds the keys (no MetaMask). A chatbot with a send button is the starter, not a project.
             </p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-border border border-border">
-              {IDEAS.map((idea, i) => (
+              {IDEAS.map((idea) => (
                 <div key={idea.name} className="bg-background p-6 flex flex-col gap-2">
                   <h3 className="text-base font-medium text-foreground">
-                    <span className="font-mono text-xs text-muted-foreground/60 mr-3">{String(i + 1).padStart(2, "0")}</span>
                     {idea.name}
                   </h3>
                   <p className="text-sm text-muted-foreground leading-relaxed">{idea.body}</p>
@@ -263,10 +262,9 @@ export default function WdkPage() {
 
           <Section title="Monad gotchas">
             <div className="grid grid-cols-1 gap-px bg-border border border-border">
-              {GOTCHAS.map((g, i) => (
+              {GOTCHAS.map((g) => (
                 <div key={g.title} className="bg-background p-6 flex flex-col gap-2">
                   <h3 className="text-base font-medium text-foreground">
-                    <span className="font-mono text-xs text-muted-foreground/60 mr-3">{String(i + 1).padStart(2, "0")}</span>
                     {g.title}
                   </h3>
                   <p className="text-sm text-muted-foreground leading-relaxed">
